@@ -67,7 +67,7 @@ Prefix for the Redis keys this store creates (`<namespace>:<n>`). Use distinct n
 #### maxListpackEntries
 
 Type: `number`\
-Default: `128`
+Default: `512`
 
 Mirror of your server's `hash-max-listpack-entries`. Set it only if you've changed the default in `redis.conf`.
 
@@ -110,8 +110,8 @@ Standalone helper that returns the bucket count for a dataset size, without cons
 ```ts
 import { computeBuckets } from "redis-packhash";
 
-computeBuckets({ expectedKeys: 1_000_000, maxListpackEntries: 128 });
-//=> 10417
+computeBuckets({ expectedKeys: 1_000_000, maxListpackEntries: 512 });
+//=> 2605
 ```
 
 ## How it works
@@ -128,7 +128,7 @@ store.set("user:12345", val)
         └─ each "users:N" hash stays a listpack → compact memory
 ```
 
-From `expectedKeys` it targets ~75% of `maxListpackEntries` (≈ 96 of the default 128) per bucket — aiming below the limit leaves headroom for uneven hash distribution and growth.
+From `expectedKeys` it targets ~75% of `maxListpackEntries` (≈ 384 of the default 512) per bucket — aiming below the limit leaves headroom for uneven hash distribution and growth.
 
 > **Note:** The listpack value limit (`hash-max-listpack-value`, default 64 B) applies to **both the value and the field name** — and your key *is* the field. A key (or value) longer than that promotes its bucket out of listpack. The bucket key name / `namespace` is a top-level key and does **not** count.
 
@@ -137,7 +137,7 @@ From `expectedKeys` it targets ~75% of `maxListpackEntries` (≈ 96 of the defau
 - **Values are strings.** redis-packhash stores exactly what you pass and returns it verbatim — serialize and parse on your side.
 - **No TTL.** Each key is a hash *field*, so ordinary `EXPIRE` can't target it. Per-field expiry exists only on Redis 7.4+ (`HEXPIRE`) and isn't exposed. Use plain top-level keys if you need expiry.
 - **Bulk ops are sequential.** `mset`/`mget` loop rather than pipeline, to stay client-agnostic.
-- **You manage the server threshold.** `maxListpackEntries` mirrors the default (128) for sizing; it can't read your `redis.conf`.
+- **You manage the server threshold.** `maxListpackEntries` mirrors the default (512) for sizing; it can't read your `redis.conf`.
 
 ## Related
 

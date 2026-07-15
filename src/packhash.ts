@@ -18,10 +18,11 @@ export interface PackHashOptions {
   namespace?: string;
 
   /**
-   * Mirror of your server's `hash-max-listpack-entries`. Used only to size
-   * buckets — set it if you've changed the default in `redis.conf`.
+   * Mirror of your server's `hash-max-listpack-entries` (upstream default 512).
+   * Used only to size buckets — set it if you've changed the default in
+   * `redis.conf`.
    *
-   * @default 128
+   * @default 512
    */
   maxListpackEntries?: number;
 }
@@ -37,7 +38,7 @@ const TARGET_LOAD_FACTOR = 0.75;
 const DEFAULT_BUCKETS = 1024;
 
 /** Default mirror of `hash-max-listpack-entries`. */
-const DEFAULT_MAX_LISTPACK_ENTRIES = 128;
+const DEFAULT_MAX_LISTPACK_ENTRIES = 512;
 
 /** Inputs for {@link computeBuckets}. */
 export interface ComputeBucketsOptions {
@@ -53,7 +54,7 @@ export interface ComputeBucketsOptions {
  * Targets ~75% of `maxListpackEntries` per bucket — staying below the listpack
  * limit leaves headroom for uneven hash distribution and growth.
  *
- *   computeBuckets({ expectedKeys: 1_000_000, maxListpackEntries: 128 }) // → 10417
+ *   computeBuckets({ expectedKeys: 1_000_000, maxListpackEntries: 512 }) // → 2605
  *
  * Inputs are assumed valid; the PackHash constructor validates option values up
  * front so this stays a pure calculation.
