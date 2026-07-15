@@ -39,7 +39,7 @@ function makeStore(
 
 /** computeBuckets with the default entry limit, for assertions. */
 const sizeFor = (expectedKeys: number) =>
-  computeBuckets({ expectedKeys, maxListpackEntries: 128 });
+  computeBuckets({ expectedKeys, maxListpackEntries: 512 });
 
 describe("PackHash", () => {
   describe("construction", () => {
@@ -82,13 +82,13 @@ describe("PackHash", () => {
 
   describe("computeBuckets", () => {
     it("should target ~75% of the entry limit by default", () => {
-      // 1,000,000 keys, target floor(128 * 0.75) = 96 per bucket
-      expect(sizeFor(1_000_000)).toBe(Math.ceil(1_000_000 / 96));
+      // 1,000,000 keys, target floor(512 * 0.75) = 384 per bucket
+      expect(sizeFor(1_000_000)).toBe(Math.ceil(1_000_000 / 384));
     });
 
     it("should keep the average under the entry limit", () => {
       const expectedKeys = 500_000;
-      expect(expectedKeys / sizeFor(expectedKeys)).toBeLessThan(128);
+      expect(expectedKeys / sizeFor(expectedKeys)).toBeLessThan(512);
     });
 
     it("should honor a custom entry limit", () => {
