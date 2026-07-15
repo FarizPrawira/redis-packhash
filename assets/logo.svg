@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="redis-packhash">
+  <defs>
+    <linearGradient id="ph" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f97316"/>
+      <stop offset="1" stop-color="#dc2626"/>
+    </linearGradient>
+  </defs>
+  <path d="M64 16 L104 39 L104 89 L64 112 L24 89 L24 39 Z" fill="none" stroke="url(#ph)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M50 44 L59 49 L59 59 L50 64 L41 59 L41 49 Z" fill="none" stroke="url(#ph)" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M78 44 L87 49 L87 59 L78 64 L69 59 L69 49 Z" fill="url(#ph)" stroke="url(#ph)" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M64 70 L73 75 L73 85 L64 90 L55 85 L55 75 Z" fill="none" stroke="url(#ph)" stroke-width="6" stroke-linejoin="round"/>
+</svg>

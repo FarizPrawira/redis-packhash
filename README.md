@@ -1,20 +1,27 @@
-# redis-packhash [![npm](https://img.shields.io/npm/v/redis-packhash.svg)](https://www.npmjs.com/package/redis-packhash)
+<p align="center">
+  <img src="https://cdn.jsdelivr.net/gh/FarizPrawira/redis-packhash@main/assets/logo.svg" width="120" height="120" alt="redis-packhash logo" />
+</p>
 
-> Bucket your Redis keys into hashes so they stay in the memory-compact listpack encoding
+# redis-packhash
+
+[![npm version](https://img.shields.io/npm/v/redis-packhash.svg)](https://www.npmjs.com/package/redis-packhash)
+[![npm downloads](https://img.shields.io/npm/dm/redis-packhash.svg)](https://www.npmjs.com/package/redis-packhash)
+![zero dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)
+![types included](https://img.shields.io/badge/types-included-blue)
+[![license MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+
+Client-agnostic Redis helper that stores key→value pairs in bucketed hashes so they stay in the memory-compact listpack encoding. Works with ioredis, node-redis, or any client exposing the hash commands.
 
 Storing millions of small values as top-level Redis keys wastes memory — each key carries heavy per-key overhead. redis-packhash shards them across a fixed set of hashes ("buckets") sized to stay in Redis's [listpack](#how-it-works) encoding, cutting memory use several-fold, behind a tiny `set`/`get`/`del` API.
 
-Works with [ioredis](https://github.com/redis/ioredis), [node-redis](https://github.com/redis/node-redis), or any client exposing the hash commands. No runtime dependencies.
-
-## Install
-
-```sh
-npm install redis-packhash
-```
-
-Requires Node.js ≥ 22.
-
-## Usage
+- Keeps each hash in Redis's memory-compact listpack encoding — several-fold less memory than top-level keys
+- Tiny `set` / `get` / `del` / `has` API, plus `mset` / `mget` batch helpers
+- Auto-sizes the bucket count from `expectedKeys` — no manual tuning
+- Client-agnostic — works with [ioredis](https://github.com/redis/ioredis), [node-redis](https://github.com/redis/node-redis), or any client exposing the hash commands
+- `computeBuckets` exposed standalone for sizing without a store
+- TypeScript-first, fully typed, ESM + CJS
+- Zero runtime dependencies
+- Node 22+
 
 ```ts
 import { PackHash } from "redis-packhash";
@@ -35,6 +42,27 @@ await store.has("user:12345");
 await store.del("user:12345");
 //=> true
 ```
+
+## Install
+
+```sh
+npm install redis-packhash
+# or
+pnpm add redis-packhash
+# or
+yarn add redis-packhash
+# or
+bun add redis-packhash
+```
+
+Both ESM and CommonJS are shipped:
+
+```ts
+import { PackHash } from "redis-packhash";        // ESM / TypeScript
+const { PackHash } = require("redis-packhash");    // CommonJS
+```
+
+Requires Node 22+. Zero runtime dependencies. DevDeps (tsup, vitest, typescript) are not installed for consumers.
 
 ## API
 
@@ -146,4 +174,4 @@ From `expectedKeys` it targets ~75% of `maxListpackEntries` (≈ 384 of the defa
 
 ## License
 
-MIT © Fariz Prawira
+MIT
