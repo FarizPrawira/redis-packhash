@@ -134,7 +134,7 @@ describe("PackHash", () => {
         expectedKeys: 100_000,
       });
       await store.set("user:12345", "1");
-      // derive the expected bucket independently — don't reuse bucketKeyFor
+      // derive the expected bucket independently, don't reuse bucketKeyFor
       const expected = `u:${fnv1a("user:12345") % store.buckets}`;
       expect(store.bucketKeyFor("user:12345")).toBe(expected);
       expect(adapter.store.get(expected)?.get("user:12345")).toBe("1");
