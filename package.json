@@ -32,9 +32,11 @@
   "keywords": [
     "redis",
     "listpack",
+    "ziplist",
     "hash",
-    "bucketing",
-    "memory"
+    "memory",
+    "ioredis",
+    "node-redis"
   ],
   "author": "Fariz Prawira <farizprawira94@gmail.com>",
   "license": "MIT",
