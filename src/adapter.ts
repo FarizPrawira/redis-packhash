@@ -28,15 +28,15 @@ const invoke = (target: unknown, method: string, ...args: unknown[]): unknown =>
  * Resolve a raw client into a normalized adapter.
  *
  * Detection:
- *   - node-redis v4+ — camelCase command methods (hSet, hGet, …)
- *   - ioredis or any other client — lowercase command methods (hset, hget, …)
+ *   - node-redis v4+: camelCase command methods (hSet, hGet, …)
+ *   - ioredis or any other client: lowercase command methods (hset, hget, …)
  *
  * @returns A normalized adapter exposing `hset`/`hget`/`hdel`.
  * @throws {UnsupportedClientError} If the client is missing required methods.
  */
 export function resolveAdapter(client: unknown): PackHashAdapter {
   // node-redis v4+ uses camelCase command methods; ioredis and other clients
-  // use lowercase. Pick the casing, then validate the *whole* set — so a partial
+  // use lowercase. Pick the casing, then validate the *whole* set, so a partial
   // client fails with a clear UnsupportedClientError rather than a late crash.
   const [setName, getName, delName] = hasMethod(client, "hSet")
     ? (["hSet", "hGet", "hDel"] as const)

@@ -1,5 +1,5 @@
 /**
- * FNV-1a (32-bit) — a fast, non-cryptographic hash with good distribution.
+ * FNV-1a (32-bit): a fast, non-cryptographic hash with good distribution.
  * Used to map a logical key onto one of N buckets, deterministically.
  *
  * The "1a" variant XORs the byte first, then multiplies by the FNV prime,

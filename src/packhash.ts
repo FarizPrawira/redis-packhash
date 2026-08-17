@@ -4,8 +4,9 @@ import { fnv1a } from "./hash.js";
 export interface PackHashOptions {
   /**
    * Rough number of keys you expect to store. redis-packhash sizes the bucket
-   * count from this, so you never compute or tune buckets yourself. Optional —
-   * when omitted, the store uses 1024 buckets (good up to ~100k keys).
+   * count from this, so you never compute or tune buckets yourself. Optional:
+   * when omitted, the store uses 1024 buckets, which carry roughly 390k keys at
+   * the target load and 524k before the hard entry limit.
    */
   expectedKeys?: number;
 
@@ -19,7 +20,7 @@ export interface PackHashOptions {
 
   /**
    * Mirror of your server's `hash-max-listpack-entries` (upstream default 512).
-   * Used only to size buckets — set it if you've changed the default in
+   * Used only to size buckets, so set it if you've changed the default in
    * `redis.conf`.
    *
    * @default 512
@@ -34,7 +35,7 @@ export interface PackHashOptions {
  */
 const TARGET_LOAD_FACTOR = 0.75;
 
-/** Bucket count used when `expectedKeys` is not provided (good to ~100k keys). */
+/** Bucket count used when `expectedKeys` is not provided (~390k keys at target load). */
 const DEFAULT_BUCKETS = 1024;
 
 /** Default mirror of `hash-max-listpack-entries`. */
@@ -51,7 +52,7 @@ export interface ComputeBucketsOptions {
 /**
  * Derive a bucket count from your dataset size, so you never compute it by hand.
  *
- * Targets ~75% of `maxListpackEntries` per bucket — staying below the listpack
+ * Targets ~75% of `maxListpackEntries` per bucket. Staying below the listpack
  * limit leaves headroom for uneven hash distribution and growth.
  *
  *   computeBuckets({ expectedKeys: 1_000_000, maxListpackEntries: 512 }) // → 2605
@@ -103,7 +104,7 @@ function validateOptions(options: PackHashOptions): void {
 
 /**
  * Stores many key→value pairs inside bucketed Redis hashes, so each hash stays
- * in Redis's memory-compact listpack encoding — cutting memory use several-fold
+ * in Redis's memory-compact listpack encoding, cutting memory use several-fold
  * versus millions of top-level keys. Values are strings; serialize and parse
  * them yourself.
  *
@@ -155,7 +156,7 @@ export class PackHash {
 
   /**
    * Store a string under `key`. Serialize non-string values (e.g. with
-   * `JSON.stringify`) before calling — redis-packhash never serializes for you.
+   * `JSON.stringify`) before calling. redis-packhash never serializes for you.
    *
    * @throws {TypeError} If `value` is not a string.
    */
@@ -198,7 +199,7 @@ export class PackHash {
   }
 
   /**
-   * Store many `[key, value]` pairs. Sequential — not pipelined.
+   * Store many `[key, value]` pairs. Sequential, not pipelined.
    */
   async mset(entries: Iterable<readonly [string, string]>): Promise<void> {
     for (const [key, value] of entries) await this.set(key, value);
