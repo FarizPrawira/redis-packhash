@@ -45,7 +45,7 @@
   "bugs": {
     "url": "https://github.com/FarizPrawira/redis-packhash/issues"
   },
-  "homepage": "https://github.com/FarizPrawira/redis-packhash#readme",
+  "homepage": "https://redis-packhash.pages.dev",
   "sideEffects": false,
   "engines": {
     "node": ">=22"
