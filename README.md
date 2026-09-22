@@ -149,7 +149,7 @@ computeBuckets({ expectedKeys: 1_000_000, maxListpackEntries: 512 });
 
 ## How it works
 
-**Listpack** is Redis's compact in-memory encoding for small hashes, the current name for what used to be called *ziplist* (renamed in Redis 7.0+). Redis selects it automatically, and keeps using it until a hash grows past a size threshold, at which point the hash is promoted to a hashtable that costs far more memory. So you never *use* listpack directly; you keep each hash small enough to *stay* in it.
+**Listpack** is Redis's compact in-memory encoding for small hashes, the structure that replaced *ziplist* in Redis 7.0. Redis selects it automatically, and keeps using it until a hash grows past a size threshold, at which point the hash is promoted to a hashtable that costs far more memory. So you never *use* listpack directly; you keep each hash small enough to *stay* in it.
 
 That's the whole trick: redis-packhash shards your keys across `N` buckets and keeps each bucket under the threshold.
 
