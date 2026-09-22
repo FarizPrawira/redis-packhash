@@ -1,7 +1,7 @@
 {
   "name": "redis-packhash",
   "version": "0.2.1",
-  "description": "Client-agnostic Redis helper that stores key→value pairs in bucketed hashes so they stay in the memory-compact listpack/ziplist encoding. Works with ioredis, node-redis, or any client exposing the hash commands.",
+  "description": "Client-agnostic Redis helper that stores key→value pairs in bucketed hashes so they stay in the memory-compact listpack encoding. Works with ioredis, node-redis, or any client exposing the hash commands.",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
